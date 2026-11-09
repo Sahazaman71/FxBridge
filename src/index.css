@@ -1,0 +1,308 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #070f1d;
+  --bg-2: #0d1b2f;
+  --surface: rgba(255, 255, 255, 0.06);
+  --surface-strong: rgba(255, 255, 255, 0.1);
+  --surface-muted: #14253d;
+  --ink: #f4f7fb;
+  --ink-2: #e3ecf9;
+  --muted: #b4c0d2;
+  --subtle: #8393ab;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(203, 219, 242, 0.4);
+  --accent: #acc6e9;
+  --accent-hover: #cbdbf2;
+  --accent-ink: #0d1b2f;
+  --violet: #8b7cf6;
+  --blue: #4f8cff;
+  --success: #8dd89f;
+  --danger: #ef7d89;
+  --warn: #f0c36b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+.display {
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: -0.03em;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', Menlo, monospace;
+}
+
+.eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--subtle);
+}
+
+/* Glass surfaces: major cards and inner fields only */
+.glass {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--border);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+/* Cursor-following spotlight, driven by --mx / --my set in GlassCard */
+.glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgba(127, 168, 255, 0.13), transparent 60%);
+}
+
+@media (hover: hover) {
+  .glass:hover {
+    border-color: rgba(203, 219, 242, 0.24);
+    box-shadow: 0 28px 70px -30px rgba(79, 140, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  }
+  .glass:hover::after {
+    opacity: 1;
+  }
+  .lift:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.glass-inner {
+  background: rgba(7, 15, 29, 0.45);
+  border: 1px solid var(--border);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.app-backdrop {
+  position: relative;
+  background: linear-gradient(180deg, #070f1d 0%, #0a1627 60%, #0d1b2f 100%);
+}
+
+/* Ambient aurora: slow, low-contrast drift behind everything */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.aurora span {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  will-change: transform;
+}
+.aurora .a1 {
+  width: 46rem;
+  height: 46rem;
+  left: -14rem;
+  top: -16rem;
+  background: radial-gradient(circle, rgba(79, 140, 255, 0.34), transparent 65%);
+  animation: drift-a 24s ease-in-out infinite alternate;
+}
+.aurora .a2 {
+  width: 40rem;
+  height: 40rem;
+  right: -12rem;
+  top: -6rem;
+  background: radial-gradient(circle, rgba(139, 124, 246, 0.3), transparent 65%);
+  animation: drift-b 28s ease-in-out infinite alternate;
+}
+.aurora .a3 {
+  width: 34rem;
+  height: 34rem;
+  left: 30%;
+  bottom: -18rem;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.16), transparent 65%);
+  animation: drift-c 32s ease-in-out infinite alternate;
+}
+.grid-fade {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 55% at 50% 0%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 55% at 50% 0%, #000 0%, transparent 75%);
+}
+
+@keyframes drift-a {
+  to {
+    transform: translate3d(8rem, 6rem, 0) scale(1.15);
+  }
+}
+@keyframes drift-b {
+  to {
+    transform: translate3d(-7rem, 8rem, 0) scale(1.1);
+  }
+}
+@keyframes drift-c {
+  to {
+    transform: translate3d(-9rem, -5rem, 0) scale(1.2);
+  }
+}
+
+/* Animated gradient on key words */
+.text-gradient {
+  background: linear-gradient(100deg, #cbdbf2 0%, #7fa8ff 30%, #a89bff 60%, #cbdbf2 100%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-pan 8s ease-in-out infinite alternate;
+}
+@keyframes gradient-pan {
+  to {
+    background-position: 100% 0;
+  }
+}
+
+/* Primary button with a light sweep on hover */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--accent);
+  color: var(--accent-ink);
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.3s ease;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%);
+  transform: translateX(-120%);
+}
+@media (hover: hover) {
+  .btn-primary:hover:not(:disabled) {
+    background: var(--accent-hover);
+    box-shadow: 0 10px 30px -10px rgba(127, 168, 255, 0.6);
+  }
+  .btn-primary:hover:not(:disabled)::after {
+    transform: translateX(120%);
+    transition: transform 0.7s ease;
+  }
+}
+
+/* Skeleton shimmer */
+.shimmer {
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0.14) 50%, rgba(255, 255, 255, 0.05) 70%);
+  background-size: 220% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+@keyframes shimmer {
+  from {
+    background-position: 120% 0;
+  }
+  to {
+    background-position: -120% 0;
+  }
+}
+
+/* Live indicator with a soft ping ring */
+.live-dot {
+  position: relative;
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: currentColor;
+}
+.live-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  animation: ping-ring 2s ease-out infinite;
+}
+@keyframes ping-ring {
+  from {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+
+/* Floating decorative chips */
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-2deg);
+  }
+  50% {
+    transform: translate3d(0, -14px, 0) rotate(2deg);
+  }
+}
+.float-slow {
+  animation: float-y 7s ease-in-out infinite;
+}
+.float-slower {
+  animation: float-y 9s ease-in-out infinite reverse;
+}
+
+/* Gradient hairline under the header that fills as the page scrolls */
+.scroll-progress {
+  height: 2px;
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, #4f8cff, #8b7cf6, #cbdbf2);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.scroll-thin::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+}
+
+[data-sonner-toaster] {
+  font-family: 'DM Sans', sans-serif;
+}
